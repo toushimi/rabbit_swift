@@ -36,8 +36,9 @@ Or install it yourself as:
     rabbit_swift_client = RabbitSwift::Client.new(swift_conf);
     token = rabbit_swift_client.get_token
 
-### File or Folder upload
+### Upload File or Folder
 
+    //dest_url = ex) https://objectstore-r1nd1111.cnode.jp/v1/XXXXXXXXXXX/container_name
     status = rabbit_swift_client.upload(token, dest_url, src_file_path)
 
 ### Check Result
