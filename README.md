@@ -20,17 +20,30 @@ Or install it yourself as:
 
 ## Usage
 
+### Set server information
+
+```ruby
+   swift_conf = {
+     auth_url: "https://ident-r1nd9999.cnode.jp/v2.0/tokens",
+     tenantName: "1234567",
+     username: "chino",
+     password: "password"
+    }
+```
+
 ### Get token
 
-    rabbit_swift_client = RabbitSwift::Client.new(@swift);
+    rabbit_swift_client = RabbitSwift::Client.new(swift_conf);
     token = rabbit_swift_client.get_token
 
 ### File or Folder upload
 
     status = rabbit_swift_client.upload(token, dest_url, src_file_path)
+
+### Check Result
     if (status == RabbitSwift::Client::UPLOAD_SUCCESS_HTTP_STATUS_CODE) 
         puts "upload success!"
-    end
+    end 
     
 
 ## Contributing
