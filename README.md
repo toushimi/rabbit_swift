@@ -1,6 +1,6 @@
 # RabbitSwift
 
-TODO: Write a gem description
+OpenStack Swift Simple Client
 
 ## Installation
 
@@ -20,11 +20,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Get token
+
+    rabbit_swift_client = RabbitSwift::Client.new(@swift);
+    token = rabbit_swift_client.get_token
+
+### File or Folder upload
+
+    status = rabbit_swift_client.upload(token, dest_url, src_file_path)
+    if (status == RabbitSwift::Client::UPLOAD_SUCCESS_HTTP_STATUS_CODE) 
+        puts "upload success!"
+    end
+    
 
 ## Contributing
 
-1. Fork it ( https://github.com/[my-github-username]/rabbit_swift/fork )
+1. Fork it ( https://github.com/AKB428/rabbit_swift/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
