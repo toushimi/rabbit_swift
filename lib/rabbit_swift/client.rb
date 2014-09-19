@@ -41,7 +41,7 @@ module RabbitSwift
       file_path = path_name_obj.expand_path.to_s
 
       http_client = HTTPClient.new
-      http_client.send_timeout = @send_timeout unless(@send_timeout.nil?)
+      http_client.send_timeout = @send_timeout.to_i unless(@send_timeout.nil?)
 
       target_url = add_filename_to_url(end_point, file_path)
 
