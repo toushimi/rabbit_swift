@@ -15,6 +15,7 @@ module RabbitSwift
       @tenantName = opt['tenantName']
       @username = opt['username']
       @password = opt['password']
+      @send_timeout = opt['send_timeout'];
     end
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
@@ -22,6 +23,8 @@ module RabbitSwift
       body =  build_auth_json
 
       http_client = HTTPClient.new
+      http_client.send_timeout = @send_timeout unless (@send_timeout.nil)
+	
       response = http_client.post_content(@auth_url, body, 'Content-Type' => 'application/json')
       response_json_body = JSON.load(response)
 
