@@ -23,7 +23,6 @@ module RabbitSwift
       body =  build_auth_json
 
       http_client = HTTPClient.new
-      http_client.send_timeout = @send_timeout unless (@send_timeout.nil)
 	
       response = http_client.post_content(@auth_url, body, 'Content-Type' => 'application/json')
       response_json_body = JSON.load(response)
@@ -42,6 +41,7 @@ module RabbitSwift
       file_path = path_name_obj.expand_path.to_s
 
       http_client = HTTPClient.new
+      http_client.send_timeout = @send_timeout if(!@send_timeout)
 
       target_url = add_filename_to_url(end_point, file_path)
 
