@@ -36,7 +36,7 @@ module RabbitSwift
       auth_header = {
           'X-Auth-Token' => token
       }
-      auth_header['X-Web-Mode'] = 'TRUE' if @web_mode
+      auth_header['X-Web-Mode'] = 'true' if @web_mode
       #相対パスがきた時のために絶対パスに変換
       path_name_obj = Pathname.new(input_file_path);
       file_path = path_name_obj.expand_path.to_s
