@@ -16,6 +16,7 @@ module RabbitSwift
       @username = opt['username']
       @password = opt['password']
       @send_timeout = opt['send_timeout'];
+      @web_mode = opt['web_mode'];
     end
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
@@ -53,6 +54,8 @@ module RabbitSwift
             'Content-Type' => 'application/directory',
             'Content-Length' => 0
         }
+
+        auth_header['X-Web-Mode'] = 'TRUE' if @web_mode
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
         if @res.status == UPLOAD_SUCCESS_HTTP_STATUS_CODE
           Dir::foreach(file_path) {|f|
