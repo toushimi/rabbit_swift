@@ -36,7 +36,7 @@ module RabbitSwift
       auth_header = {
           'X-Auth-Token' => token
       }
-
+      auth_header['X-Web-Mode'] = 'TRUE' if @web_mode
       #相対パスがきた時のために絶対パスに変換
       path_name_obj = Pathname.new(input_file_path);
       file_path = path_name_obj.expand_path.to_s
@@ -49,13 +49,8 @@ module RabbitSwift
       puts 'upload_url -> ' + target_url
 
       if File::ftype(file_path) == 'directory'
-        auth_header = {
-            'X-Auth-Token' => token,
-            'Content-Type' => 'application/directory',
-            'Content-Length' => 0
-        }
-
-        auth_header['X-Web-Mode'] = 'TRUE' if @web_mode
+        auth_header['Content-Type'] = 'application/directory'
+        auth_header['Content-Length'] = 0
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
         if @res.status == UPLOAD_SUCCESS_HTTP_STATUS_CODE
           Dir::foreach(file_path) {|f|
