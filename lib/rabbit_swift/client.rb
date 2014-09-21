@@ -52,20 +52,22 @@ module RabbitSwift
 
       if File::ftype(file_path) == 'directory'
         auth_header['Content-Length'] = 0
-        if @web_mode
-          auth_header['X-Container-Read'] = '.r:*,.rlistings'
-          auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
+        auth_header['Content-Type'] = 'application/directory'
+        if @web_mode 
+          auth_header['X-Container-Read'] = '.r:*' + ',.rlistings'
+          auth_header['X-Container-Meta-Web-Index'] = 'index.html'
+          #auth_header['X-Container-Meta-Web-Listings'] = 'true'
+          #auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
         end
-        
+        p auth_header
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
-        p @res
         if @res.status == UPLOAD_SUCCESS_HTTP_STATUS_CODE
           Dir::foreach(file_path) {|f|
             next if (f == '.' || f == '..')
             begin
               child_path = path_name_obj.join(f)
               # 再帰
-              upload(token, end_point + '/' +File::basename(file_path), child_path)
+              upload(token, add_filename_to_url(end_point, File::basename(file_path)), child_path)
             rescue => e
               puts e
             end
@@ -73,7 +75,6 @@ module RabbitSwift
         end
       else
         File.open(file_path) do |file|
-          p auth_header
           @res = http_client.put(URI.parse(URI.encode(target_url)), file, auth_header)
         end
       end
