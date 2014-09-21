@@ -3,6 +3,7 @@ require 'uri'
 require 'json'
 require 'httpclient'
 require 'pathname'
+require 'mime/types'
 
 module RabbitSwift
 
@@ -33,13 +34,14 @@ module RabbitSwift
 
     # curl -i -X PUT -H "X-Auth-Token: トークン" オブジェクトストレージエンドポイント/コンテナ名/ -T オブジェクトへのパス
     def upload(token, end_point, input_file_path)
-      auth_header = {
-          'X-Auth-Token' => token
-      }
-      auth_header['X-Web-Mode'] = 'true' if @web_mode
       #相対パスがきた時のために絶対パスに変換
       path_name_obj = Pathname.new(input_file_path);
       file_path = path_name_obj.expand_path.to_s
+      auth_header = {
+          'X-Auth-Token' => token,
+          'Content-Type' => MIME::Types.type_for(file_path)[0].to_s
+      }
+      auth_header['X-Web-Mode'] = 'true' if @web_mode
 
       http_client = HTTPClient.new
       http_client.send_timeout = @send_timeout.to_i unless(@send_timeout.nil?)
@@ -49,9 +51,14 @@ module RabbitSwift
       puts 'upload_url -> ' + target_url
 
       if File::ftype(file_path) == 'directory'
-        auth_header['Content-Type'] = 'application/directory'
         auth_header['Content-Length'] = 0
+        if @web_mode
+          auth_header['X-Container-Read'] = '.r:*,.rlistings'
+          auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
+        end
+        
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
+        p @res
         if @res.status == UPLOAD_SUCCESS_HTTP_STATUS_CODE
           Dir::foreach(file_path) {|f|
             next if (f == '.' || f == '..')
@@ -66,6 +73,7 @@ module RabbitSwift
         end
       else
         File.open(file_path) do |file|
+          p auth_header
           @res = http_client.put(URI.parse(URI.encode(target_url)), file, auth_header)
         end
       end
