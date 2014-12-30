@@ -18,6 +18,7 @@ module RabbitSwift
       @password = opt['password']
       @send_timeout = opt['send_timeout'];
       @web_mode = opt['web_mode'];
+      @web_file_listing = opt['web_file_listing'];
     end
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
@@ -53,9 +54,13 @@ module RabbitSwift
       if File::ftype(file_path) == 'directory'
         auth_header['Content-Length'] = 0
         auth_header['Content-Type'] = 'application/directory'
-        if @web_mode 
-          auth_header['X-Container-Read'] = '.r:*' + ',.rlistings'
-          auth_header['X-Container-Meta-Web-Index'] = 'index.html'
+        if @web_mode
+          if @web_file_listing
+           auth_header['X-Container-Read'] = '.r:*' + ',.rlistings'
+           auth_header['X-Container-Meta-Web-Index'] = 'index.html'
+          else
+            auth_header['X-Container-Read'] = '.r:*'
+          end
           #auth_header['X-Container-Meta-Web-Listings'] = 'true'
           #auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
         end

@@ -22,7 +22,7 @@ Or install it yourself as:
 
 ### Set server information
 
-```ruby
+```
    swift_conf = {
      auth_url: "https://ident-r1nd9999.cnode.jp/v2.0/tokens",
      tenantName: "1234567",
@@ -38,7 +38,7 @@ Or install it yourself as:
 
 ### Upload File or Folder
 
-    //dest_url = ex) https://objectstore-r1nd1111.cnode.jp/v1/XXXXXXXXXXX/container_name
+    dest_url = "https://objectstore-r1nd1111.cnode.jp/v1/XXXXXXXXXXX/container_name"
     status = rabbit_swift_client.upload(token, dest_url, src_file_path)
 
 ### Check Result
