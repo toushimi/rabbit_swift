@@ -53,6 +53,13 @@ module RabbitSwift
 
       puts 'upload_url -> ' + target_url
 
+      if @delete_at
+        auth_header['X-Delete-At'] = @delete_at
+      end
+      if @delete_after
+        auth_header['X-Delete-After'] = @delete_after
+      end
+
       if File::ftype(file_path) == 'directory'
         auth_header['Content-Length'] = 0
         auth_header['Content-Type'] = 'application/directory'
@@ -65,12 +72,6 @@ module RabbitSwift
           end
           #auth_header['X-Container-Meta-Web-Listings'] = 'true'
           #auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
-        end
-        if @delete_at
-          auth_header['X-Delete-At'] = @delete_at
-        end
-        if @delete_after
-          auth_header['X-Delete-After'] = @delete_after
         end
         p auth_header
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
@@ -87,6 +88,7 @@ module RabbitSwift
           }
         end
       else
+        p auth_header
         File.open(file_path) do |file|
           @res = http_client.put(URI.parse(URI.encode(target_url)), file, auth_header)
         end
