@@ -19,7 +19,7 @@ module RabbitSwift
       @send_timeout = opt['send_timeout'];
       @web_mode = opt['web_mode'];
       @web_file_listing = opt['web_file_listing'];
-      @delete_at = opt['delete_after']
+      @delete_at = opt['delete_at']
       @delete_after = opt['delete_after']
     end
 
