@@ -19,6 +19,8 @@ module RabbitSwift
       @send_timeout = opt['send_timeout'];
       @web_mode = opt['web_mode'];
       @web_file_listing = opt['web_file_listing'];
+      @delete_at = opt['delete_after']
+      @delete_after = opt['delete_after']
     end
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
@@ -63,6 +65,12 @@ module RabbitSwift
           end
           #auth_header['X-Container-Meta-Web-Listings'] = 'true'
           #auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
+        end
+        if @delete_at
+          auth_header['X-Delete-At'] = @delete_at
+        end
+        if @delete_after
+          auth_header['X-Delete-After'] = @delete_after
         end
         p auth_header
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
