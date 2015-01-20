@@ -43,9 +43,8 @@ module RabbitSwift
       }
       http_client = HTTPClient.new
       response = http_client.head(URI.parse(URI.encode(url)))
-      response.header.all
       header = {}
-      response.each do |header_list|
+      response.header.all.each do |header_list|
         header[header_list[0]] = header_list[1]
       end
       header
