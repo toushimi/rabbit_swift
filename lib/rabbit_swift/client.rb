@@ -134,7 +134,7 @@ module RabbitSwift
 
     def create_meta_data_header(auth_header, meta_data_hash)
       #X-Object-Meta-{name}
-      dataHash.each{|key, value|
+      meta_data_hash.each{|key, value|
         auth_header['X-Object-Meta-' + key] = value
       }
     end
