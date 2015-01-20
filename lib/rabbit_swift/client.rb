@@ -21,6 +21,7 @@ module RabbitSwift
       @web_file_listing = opt['web_file_listing'];
       @delete_at = opt['delete_at']
       @delete_after = opt['delete_after']
+      @meta_data_hash = opt['meta_data_hash']
     end
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
@@ -58,6 +59,9 @@ module RabbitSwift
       end
       if @delete_after
         auth_header['X-Delete-After'] = @delete_after
+      end
+      if @meta_data_hash
+        create_meta_data_header(auth_header, @meta_data_hash)
       end
 
       if File::ftype(file_path) == 'directory'
@@ -126,6 +130,13 @@ module RabbitSwift
       end
 
       return decorate_url
+    end
+
+    def create_meta_data_header(auth_header, meta_data_hash)
+      #X-Object-Meta-{name}
+      dataHash.each{|key, value|
+        auth_header['X-Object-Meta-' + key] = value
+      }
     end
 
   end
