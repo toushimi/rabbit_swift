@@ -11,6 +11,7 @@ module RabbitSwift
 
     UPLOAD_SUCCESS_HTTP_STATUS_CODE = 201
     HEAD_SUCCESS_HTTP_STATUS_CODE = 204
+    DELETE_SUCCESS_HTTP_STATUS_CODE = 204
 
     def initialize(opt)
       @auth_url = opt['auth_url']
@@ -59,6 +60,19 @@ module RabbitSwift
         end
       end
       meta_data
+    end
+
+    def delete(token, url)
+      auth_header = {
+          'X-Auth-Token' => token
+      }
+      http_client = HTTPClient.new
+      response = http_client.delete(URI.parse(URI.encode(url)))
+      header = {}
+      response.header.all.each do |header_list|
+        header[header_list[0]] = header_list[1]
+      end
+      header
     end
 
     # curl -i -X PUT -H "X-Auth-Token: トークン" オブジェクトストレージエンドポイント/コンテナ名/ -T オブジェクトへのパス
