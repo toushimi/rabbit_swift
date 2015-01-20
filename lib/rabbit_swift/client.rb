@@ -37,13 +37,12 @@ module RabbitSwift
       response_json_body['access']['token']['id']
     end
 
-    def head(token, end_point, object_path)
+    def head(token, url)
       auth_header = {
           'X-Auth-Token' => token
       }
-      target_url = add_filename_to_url(end_point, file_path)
       http_client = HTTPClient.new
-      response = http_client.head(URI.parse(URI.encode(target_url)))
+      response = http_client.head(URI.parse(URI.encode(url)))
       response
     end
 
