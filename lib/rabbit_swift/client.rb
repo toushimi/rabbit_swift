@@ -10,6 +10,7 @@ module RabbitSwift
   class Client
 
     UPLOAD_SUCCESS_HTTP_STATUS_CODE = 201
+    HEAD_SUCCESS_HTTP_STATUS_CODE = 204
 
     def initialize(opt)
       @auth_url = opt['auth_url']
@@ -34,6 +35,16 @@ module RabbitSwift
       response_json_body = JSON.load(response)
 
       response_json_body['access']['token']['id']
+    end
+
+    def head(token, end_point, object_path)
+      auth_header = {
+          'X-Auth-Token' => token
+      }
+      target_url = add_filename_to_url(end_point, file_path)
+      http_client = HTTPClient.new
+      response = http_client.head(URI.parse(URI.encode(target_url)))
+      response
     end
 
     # curl -i -X PUT -H "X-Auth-Token: トークン" オブジェクトストレージエンドポイント/コンテナ名/ -T オブジェクトへのパス
