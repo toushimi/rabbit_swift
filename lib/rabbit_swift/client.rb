@@ -43,7 +43,23 @@ module RabbitSwift
       }
       http_client = HTTPClient.new
       response = http_client.head(URI.parse(URI.encode(url)))
-      response
+      response.header.all
+      header = {}
+      response.each do |header_list|
+        header[header_list[0]] = header_list[1]
+      end
+      header
+    end
+
+    def get_meta_data(token, url)
+      response = head(token, url)
+      meta_data = {}
+      response.each do |header_list|
+        if (header_list[0] =~ /^X-Object-Meta/)
+          meta_data[header_list[0].gsub('X-Object-Meta-', '')] = header_list[1]
+        end
+      end
+      meta_data
     end
 
     # curl -i -X PUT -H "X-Auth-Token: トークン" オブジェクトストレージエンドポイント/コンテナ名/ -T オブジェクトへのパス
