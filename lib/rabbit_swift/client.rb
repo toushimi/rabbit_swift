@@ -72,6 +72,7 @@ module RabbitSwift
       response.header.all.each do |header_list|
         header[header_list[0]] = header_list[1]
       end
+      p response
       header
     end
 
