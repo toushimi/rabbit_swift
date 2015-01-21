@@ -67,7 +67,8 @@ module RabbitSwift
           'X-Auth-Token' => token
       }
       http_client = HTTPClient.new
-      response = http_client.delete(URI.parse(URI.encode(url)), auth_header)
+      args = {:body => nil, :header => auth_header, :query => nil}
+      response = http_client.delete(URI.parse(URI.encode(url)), args)
       header = {}
       response.header.all.each do |header_list|
         header[header_list[0]] = header_list[1]
