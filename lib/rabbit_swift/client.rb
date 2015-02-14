@@ -83,10 +83,16 @@ module RabbitSwift
       #相対パスがきた時のために絶対パスに変換
       path_name_obj = Pathname.new(input_file_path);
       file_path = path_name_obj.expand_path.to_s
-      auth_header = {
-          'X-Auth-Token' => token,
-          'Content-Type' => MIME::Types.type_for(file_path)[0].to_s
-      }
+      mime = MIME::Types.type_for(file_path)[0]
+      auth_header =
+          if mime.nil?
+            {'X-Auth-Token' => token}
+          else
+            {'X-Auth-Token' => token,
+             'Content-Type' => MIME::Types.type_for(file_path)[0].to_s
+            }
+          end
+
       auth_header['X-Web-Mode'] = 'true' if @web_mode
 
       http_client = HTTPClient.new
@@ -142,6 +148,29 @@ module RabbitSwift
 
       #p @res
       @res.status
+    end
+
+    def upload_manifest(token, end_point, input_file_path, manifest_json)
+      #相対パスがきた時のために絶対パスに変換
+      path_name_obj = Pathname.new(input_file_path);
+      file_path = path_name_obj.expand_path.to_s
+      target_url = add_filename_to_url(end_point, file_path)
+
+      manifest_path = File.join(end_point, File.basename(input_file_path))
+      p end_point
+      p File.basename(input_file_path)
+      p manifest_path
+      auth_header =
+            {'X-Auth-Token' => token,
+            'X-Object-Manifest' => manifest_path,
+            'X-STATIC-LARGE-OBJECT' => true
+            }
+      http_client = HTTPClient.new
+      url = URI.parse(URI.encode(target_url + '?multipart-manifest=put'))
+      p url
+      response = http_client.put(url, manifest_json, auth_header)
+      p response
+      p response.status
     end
 
     private
