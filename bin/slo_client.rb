@@ -61,7 +61,7 @@ class Slo_client
     # JSONマニフェストファイルをつくる
     manifest_json = slo.create_manifest_list(rabbit_file_split.file_list)
     puts manifest_json
-    
+
     rabbit_swift_client = RabbitSwift::Client.new(@swift)
     @token = rabbit_swift_client.get_token
     puts 'token -> ' + token
