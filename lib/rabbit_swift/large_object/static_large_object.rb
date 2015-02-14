@@ -32,10 +32,13 @@ module RabbitSwift::LargeObject
     end
 
     def create_manifest_list(file_path_list)
-      manifest = file_path_list.map{|file_path|
+      manifest = []
+
+      file_path_list.each do |file_path|
         md5 = Digest::MD5.file(file_path).to_s
-        {path:  File.join(@dest_container_path, File.basename(file_path)), etag: md5, size_bytes: File.size(file_path)}
-      }
+        manifest.push(
+        {path:  File.join(@dest_container_path, File.basename(file_path)), etag: md5, size_bytes: File.size(file_path)})
+      end
       JSON.generate(manifest)
     end
 

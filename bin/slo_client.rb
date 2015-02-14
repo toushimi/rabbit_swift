@@ -33,11 +33,12 @@ opt.parse!(ARGV)
 
 class Slo_client
 
-  attr_reader :src_path, :dest_path, :conf_path, :swift, :token, :limit_file_size
+  attr_accessor :src_path, :dest_path, :conf_path, :swift, :token, :limit_file_size, :original_dest_path
 
   def initialize(src_path, dest_path, conf_path, send_timeout: 7200, limit_file_size:  RabbitSwift::LargeObject::StaticLargeObject::LIMIT_FILE_SIZE)
     @src_path = src_path
     @dest_path = dest_path
+    @original_dest_path = dest_path
     @conf_path = conf_path
     @limit_file_size = limit_file_size
     File.open conf_path do |file|
@@ -60,7 +61,7 @@ class Slo_client
     # JSONマニフェストファイルをつくる
     manifest_json = slo.create_manifest_list(rabbit_file_split.file_list)
     puts manifest_json
-
+    
     rabbit_swift_client = RabbitSwift::Client.new(@swift)
     @token = rabbit_swift_client.get_token
     puts 'token -> ' + token
@@ -78,8 +79,9 @@ class Slo_client
       end
     end
 
+    puts "dest_path->" + dest_path
     #マニフェストをアップロード
-    rabbit_swift_client.upload_manifest(token, dest_path, @src_path, manifest_json)
+    rabbit_swift_client.upload_manifest(token, dest_path, @original_dest_path, @src_path, manifest_json)
 
     #分割したファイルを削除
     rabbit_file_split.delete_all
