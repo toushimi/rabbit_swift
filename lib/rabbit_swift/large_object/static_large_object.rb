@@ -20,7 +20,7 @@ module RabbitSwift::LargeObject
       @file_path = file_path
       @split_file_path = split_file_path
       @dest_container_path = dest_container_path
-      @limit_file_size = limit_file_size.to_i
+      @limit_file_size = limit_file_size
     end
 
     def split

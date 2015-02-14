@@ -46,6 +46,8 @@ Or install it yourself as:
         puts "upload success!"
     end 
     
+### Support Static Large Object
+    bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
 
 ## Contributing
 

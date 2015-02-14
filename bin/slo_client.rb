@@ -4,6 +4,8 @@ require 'rabbit_swift'
 
 #ruby -I./lib/ this.rb
 #bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 1048576
+#bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
+
 =begin
 -c conf.json
 {
@@ -18,7 +20,7 @@ require 'rabbit_swift'
 =end
 
 opt = OptionParser.new
-Version = "1.0.0"
+Version = '1.0.0'
 
 src_path = nil
 dest_path = nil

@@ -160,7 +160,8 @@ module RabbitSwift
       p end_point
       p File.basename(input_file_path)
       p manifest_path
-      p manifest_path.sub!(/^./,'')
+      manifest_path.sub!(/^./,'')
+      p manifest_path
       auth_header =
             {'X-Auth-Token' => token,
             'X-Object-Manifest' => manifest_path+'_',
