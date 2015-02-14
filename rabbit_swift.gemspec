@@ -9,8 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["AKB428"]
   spec.email         = ["otoraru@gmail.com"]
   spec.summary       = %q{OpenStack Swift Simple Client}
-  spec.description   = %q{OpenStack Swift Simple Client. main target for "ConoHa VPS"}
-  spec.homepage      = ""
+  spec.description   = %q{OpenStack Object Storage Simple Client}
+  spec.homepage      = "http://akb428.hatenablog.com/"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
@@ -22,4 +22,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_dependency 'httpclient'
   spec.add_dependency 'mime-types'
+  spec.add_dependency 'rabbit_file_split'
 end

@@ -4,6 +4,7 @@ require 'json'
 require 'httpclient'
 require 'pathname'
 require 'mime/types'
+require 'digest/md5'
 
 module RabbitSwift
 
