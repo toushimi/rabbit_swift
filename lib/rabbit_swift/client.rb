@@ -14,6 +14,8 @@ module RabbitSwift
     HEAD_SUCCESS_HTTP_STATUS_CODE = 204
     DELETE_SUCCESS_HTTP_STATUS_CODE = 204
 
+    @token = nil
+
     def initialize(opt)
       @auth_url = opt['auth_url']
       @tenantName = opt['tenantName']
@@ -29,6 +31,7 @@ module RabbitSwift
 
     #curl -i 'https://********.jp/v2.0/tokens' -X POST -H "Content-Type: application/json" -H "Accept: application/json"  -d '{"auth": {"tenantName": "1234567", "passwordCredentials": {"username": "1234567", "password": "************"}}}'
     def get_token
+      return @token if !@token.nil?
       body =  build_auth_json
 
       http_client = HTTPClient.new
@@ -36,7 +39,7 @@ module RabbitSwift
       response = http_client.post_content(@auth_url, body, 'Content-Type' => 'application/json')
       response_json_body = JSON.load(response)
 
-      response_json_body['access']['token']['id']
+      @token = response_json_body['access']['token']['id']
     end
 
     def head(token, url)
@@ -141,9 +144,17 @@ module RabbitSwift
         end
       else
         p auth_header
-        File.open(file_path) do |file|
-          @res = http_client.put(URI.parse(URI.encode(target_url)), file, auth_header)
+
+        if LargeObject::Slo_client.is_over_default_limit_object_size(File.size(file_path))
+          #Auto SLO Mode
+          puts '------ Over limit object size! change Static Large Object Mode. ------- '
+          LargeObject::Slo_client.new(self, input_file_path, end_point).upload
+        else
+          File.open(file_path) do |file|
+            @res = http_client.put(URI.parse(URI.encode(target_url)), file, auth_header)
+          end
         end
+
       end
 
       #p @res

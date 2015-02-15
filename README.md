@@ -47,6 +47,17 @@ Or install it yourself as:
     end 
     
 ### Support Static Large Object
+
+#### When object size 5BG over. Auto change mode SLO
+    rabbit_swift_client.upload(token, dest_url, 5GB_under_file.zip) --> normal upload
+    rabbit_swift_client.upload(token, dest_url, 5GB_over_file.zip) --> static large object upload
+
+#### SLO Flow
+1. split File
+2. upload split files
+3. upload manifest file
+
+#### SLO Client
     bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
 
 ## Contributing
