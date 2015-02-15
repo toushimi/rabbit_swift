@@ -5,7 +5,7 @@ require 'rabbit_swift'
 #ruby -I./lib/ this.rb
 #bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 1048576
 #bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
-
+#bundle exec ruby -I./lib bin/slo_client.rb -s ~/MBA_Grahics/mba2/1423672249367.jpg -d /test -c ../chino/conf/conf.json -l 100KB
 
 =begin
 -c conf.json
@@ -46,4 +46,4 @@ end
 
 rabbit_swift_client = RabbitSwift::Client.new(swift_conf_json)
 
-LargeObject::Slo_client.new(rabbit_swift_client, src_path, dest_path, slo_option).upload
+RabbitSwift::LargeObject::Slo_client.new(rabbit_swift_client, src_path, dest_path, slo_option).upload

@@ -9,7 +9,10 @@ module RabbitSwift::LargeObject
       @rabbit_swift_client = rabbit_swift_client
       @src_path = src_path
       @dest_path = dest_path
-      @original_dest_path = dest_path
+      #TODO かなり無理があるので改修必要
+      @original_dest_path = dest_path.sub(/https:\/\/.*\/v1\/.*\//, '/')
+
+
       @slo_option = slo_option
     end
 
@@ -27,7 +30,8 @@ module RabbitSwift::LargeObject
 
       token = rabbit_swift_client.get_token
 
-      #ファイルを全てアップロード(with etag)
+      #TODO with etag
+      #ファイルを全てアップロード
       rabbit_file_split.file_list.each do |file_path|
         status = rabbit_swift_client.upload(token, dest_path, file_path)
         puts file_path

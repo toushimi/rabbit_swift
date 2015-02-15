@@ -43,7 +43,7 @@ module RabbitSwift::LargeObject
     end
 
     def self.is_over_default_limit_object_size(file_size)
-      LIMIT_FILE_SIZE > file_size
+      LIMIT_FILE_SIZE < file_size
     end
 
   end

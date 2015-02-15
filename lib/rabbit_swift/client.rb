@@ -145,8 +145,9 @@ module RabbitSwift
       else
         p auth_header
 
-        if LargeObject::Slo_client.is_over_default_limit_object_size(File.size(file_path))
+        if LargeObject::StaticLargeObject.is_over_default_limit_object_size(File.size(file_path))
           #Auto SLO Mode
+          p File.size(file_path)
           puts '------ Over limit object size! change Static Large Object Mode. ------- '
           LargeObject::Slo_client.new(self, input_file_path, end_point).upload
         else
