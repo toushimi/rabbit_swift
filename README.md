@@ -41,11 +41,11 @@ Or install it yourself as:
     dest_url = "https://objectstore-r1nd1111.cnode.jp/v1/XXXXXXXXXXX/container_name"
     status = rabbit_swift_client.upload(token, dest_url, src_file_path)
 
-### Check Result
+#### Check Result
     if (status == RabbitSwift::Client::UPLOAD_SUCCESS_HTTP_STATUS_CODE) 
         puts "upload success!"
     end 
-    
+
 ### Support Static Large Object
 
 #### When object size 5BG over. Auto change mode SLO
@@ -53,12 +53,19 @@ Or install it yourself as:
     rabbit_swift_client.upload(token, dest_url, 5GB_over_file.zip) --> static large object upload
 
 #### SLO Flow
-1. split File
+1. split file
 2. upload split files
 3. upload manifest file
+4. delete split files
 
+### bin utils
+
+#### List Container
+    bundle exec ruby -I./lib bin/container_list.rb -l /test -c ../chino/conf/conf.json
 #### SLO Client
     bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
+
+
 
 ## Contributing
 

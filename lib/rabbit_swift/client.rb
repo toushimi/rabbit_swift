@@ -55,6 +55,18 @@ module RabbitSwift
       header
     end
 
+    def list(token, url)
+      auth_header = {
+          'X-Auth-Token' => token
+      }
+      query = {
+          'format' => 'json'
+      }
+      http_client = HTTPClient.new
+      response = http_client.get(URI.parse(URI.encode(url)), query, auth_header)
+      JSON.load(response.body)
+    end
+
     def get_meta_data(token, url)
       response = head(token, url)
       meta_data = {}
