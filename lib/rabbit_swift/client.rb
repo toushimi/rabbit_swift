@@ -58,6 +58,7 @@ module RabbitSwift
       header
     end
 
+    # TODO folder all save
     def get_object(token, url, dest_folder = nil)
       auth_header = {
           'X-Auth-Token' => token
@@ -76,6 +77,7 @@ module RabbitSwift
       open(dest_file, 'wb') do |file|
         file.write http_client.get_content(URI.parse(URI.encode(url)), query, auth_header)
       end
+      dest_file
     end
 
     # TODO

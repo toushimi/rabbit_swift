@@ -44,11 +44,15 @@ Or install it yourself as:
 #### Check Result
     if (status == RabbitSwift::Client::UPLOAD_SUCCESS_HTTP_STATUS_CODE) 
         puts "upload success!"
-    end 
+    end
+
+### Get Object
+    rabbit_swift_client.get_object(token, url) #save current directory
+    rabbit_swift_client.get_object(token, url, dest_path)
 
 ### Support Static Large Object
 
-#### When object size 5BG over. Auto change mode SLO
+#### When upload object size 5BG over. Auto change mode SLO
     rabbit_swift_client.upload(token, dest_url, 5GB_under_file.zip) --> normal upload
     rabbit_swift_client.upload(token, dest_url, 5GB_over_file.zip) --> static large object upload
 
@@ -62,7 +66,13 @@ Or install it yourself as:
 
 #### List Container
     bundle exec ruby -I./lib bin/container_list.rb -l /test -c ../chino/conf/conf.json
-#### SLO Client
+
+#### Get Object Client
+
+    bundle exec ruby -I./lib bin/get_object.rb -t /test/file.jpg -c ../chino/conf/conf.json
+    bundle exec ruby -I./lib bin/get_object.rb -t /test/file.jpg -d ./save_folder/ -c ../chino/conf/conf.json
+
+#### SLO Upload Client
     bundle exec ruby -I./lib bin/slo_client.rb -s ~/Downloads/test.zip -d /test -c ../chino/conf/conf.json -l 100MB
 
 

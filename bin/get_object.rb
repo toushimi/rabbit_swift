@@ -1,6 +1,7 @@
 require 'json'
 require 'optparse'
 require 'rabbit_swift'
+require 'digest/md5'
 
 #bundle exec ruby -I./lib bin/get_object.rb -t /test/file.jpg -c ../chino/conf/conf.json
 #bundle exec ruby -I./lib bin/get_object.rb -t /test/file.jpg -d ./save_folder/ -c ../chino/conf/conf.json
@@ -29,6 +30,22 @@ end
 rabbit_swift_client = RabbitSwift::Client.new(swift_conf_json)
 token = rabbit_swift_client.get_token
 response = rabbit_swift_client.head(token, url)
-p response
-response = rabbit_swift_client.get_object(token, url, dest_path)
-p response
+
+response.each do |k, v|
+  puts k + ' = '+ v
+end
+
+original_file_md5 = response['Etag']
+
+save_file_path = rabbit_swift_client.get_object(token, url, dest_path)
+puts save_file_path
+save_file_md5 = Digest::MD5.file(save_file_path).to_s
+
+puts original_file_md5 + ' --> original_file_md5'
+puts save_file_md5 + ' --> save_file_md5'
+
+if original_file_md5 == save_file_md5
+  puts 'OK! MD5 checksum'
+else
+  puts 'BAD MD5 checksum  ><'
+end
