@@ -52,11 +52,14 @@ Or install it yourself as:
 
 ### Support Static Large Object
 
+#### SLO Object Download Support
+    rabbit_swift_client.get_object(token, url) --> enable SLO object download
+
 #### When upload object size 5GB over. Auto change mode SLO
     rabbit_swift_client.upload(token, dest_url, 5GB_under_file.zip) --> normal upload
     rabbit_swift_client.upload(token, dest_url, 5GB_over_file.zip) --> static large object upload
 
-#### SLO Flow
+#### SLO Upload Flow
 1. split file
 2. upload split files
 3. upload manifest file

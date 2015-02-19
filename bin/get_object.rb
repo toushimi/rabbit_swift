@@ -27,6 +27,7 @@ File.open conf_path do |file|
   end
 end
 
+# TODO
 def decode_large_object_md5(encode_md5)
   encode_md5.gsub(/\"/,'')
 end
@@ -36,23 +37,42 @@ token = rabbit_swift_client.get_token
 response = rabbit_swift_client.head(token, url)
 
 is_large_object = response.has_key?('X-Static-Large-Object') ? true : false
+original_file_size = response['Content-Length']
 
 response.each do |k, v|
   puts k + ' = '+ v
 end
 
-original_file_md5 = is_large_object ? decode_large_object_md5(response['Etag']) : response['Etag']
+original_file_md5 = response['Etag']
 
 save_file_path = rabbit_swift_client.get_object(token, url, dest_path)
 puts save_file_path
-save_file_md5 = Digest::MD5.file(save_file_path).to_s
 
-puts original_file_md5 + ' --> original_file_md5'
-puts save_file_md5 + ' --> save_file_md5'
+#ref SLO md5 https://github.com/openstack/python-swiftclient/blob/06c73c6020e5af873e3ce245a27035da3448de7b/swiftclient/service.py#L330
+# self._expected_etag: ヘッダーのEtag
+# 保存したファイルのmd5 self._actual_md5
 
-if original_file_md5 == save_file_md5
-  puts 'OK! MD5 checksum'
+save_file_size = File.size(save_file_path)
+puts original_file_size + ' --> original_file_size'
+puts save_file_size.to_s + ' --> save_file_size'
+
+if original_file_size.to_i == save_file_size
+  puts 'OK! file size'
 else
-  puts 'BAD MD5 checksum  ><'
+  puts 'BAD file size  ><'
+end
+
+
+#when SLO don't check md5. check file size
+if (!is_large_object)
+  save_file_md5 = Digest::MD5.file(save_file_path).to_s
+  puts original_file_md5 + ' --> original_file_md5'
+  puts save_file_md5 + ' --> save_file_md5'
+
+  if original_file_md5 == save_file_md5
+    puts 'OK! MD5 checksum'
+  else
+    puts 'BAD MD5 checksum  ><'
+  end
 end
 
