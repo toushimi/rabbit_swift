@@ -10,8 +10,8 @@ module RabbitSwift
 
   class Client
 
-    UPLOAD_SUCCESS_HTTP_STATUS_CODE = 201
     HEAD_SUCCESS_HTTP_STATUS_CODE = 200
+    UPLOAD_SUCCESS_HTTP_STATUS_CODE = 201
     DELETE_SUCCESS_HTTP_STATUS_CODE = 204
 
     @token = nil
@@ -78,28 +78,6 @@ module RabbitSwift
         file.write http_client.get_content(URI.parse(URI.encode(url)), query, auth_header)
       end
       dest_file
-    end
-
-    # TODO
-    def get_static_large_object(token, url, dest_folder = nil)
-      auth_header = {
-          'X-Auth-Token' => token
-      }
-      query = {
-          'format' => 'json'
-      }
-    end
-
-    def list(token, url)
-      auth_header = {
-          'X-Auth-Token' => token
-      }
-      query = {
-          'format' => 'json'
-      }
-      http_client = HTTPClient.new
-      response = http_client.get(URI.parse(URI.encode(url)), query, auth_header)
-      JSON.load(response.body)
     end
 
     def get_meta_data(token, url)

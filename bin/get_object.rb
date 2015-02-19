@@ -27,15 +27,21 @@ File.open conf_path do |file|
   end
 end
 
+def decode_large_object_md5(encode_md5)
+  encode_md5.gsub(/\"/,'')
+end
+
 rabbit_swift_client = RabbitSwift::Client.new(swift_conf_json)
 token = rabbit_swift_client.get_token
 response = rabbit_swift_client.head(token, url)
+
+is_large_object = response.has_key?('X-Static-Large-Object') ? true : false
 
 response.each do |k, v|
   puts k + ' = '+ v
 end
 
-original_file_md5 = response['Etag']
+original_file_md5 = is_large_object ? decode_large_object_md5(response['Etag']) : response['Etag']
 
 save_file_path = rabbit_swift_client.get_object(token, url, dest_path)
 puts save_file_path
@@ -49,3 +55,4 @@ if original_file_md5 == save_file_md5
 else
   puts 'BAD MD5 checksum  ><'
 end
+

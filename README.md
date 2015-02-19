@@ -1,6 +1,6 @@
 # RabbitSwift
 
-OpenStack Swift Simple Client
+OpenStack Object Storage (Swift) Client
 
 ## Installation
 
@@ -52,7 +52,7 @@ Or install it yourself as:
 
 ### Support Static Large Object
 
-#### When upload object size 5BG over. Auto change mode SLO
+#### When upload object size 5GB over. Auto change mode SLO
     rabbit_swift_client.upload(token, dest_url, 5GB_under_file.zip) --> normal upload
     rabbit_swift_client.upload(token, dest_url, 5GB_over_file.zip) --> static large object upload
 
