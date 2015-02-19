@@ -11,7 +11,7 @@ module RabbitSwift
   class Client
 
     UPLOAD_SUCCESS_HTTP_STATUS_CODE = 201
-    HEAD_SUCCESS_HTTP_STATUS_CODE = 204
+    HEAD_SUCCESS_HTTP_STATUS_CODE = 200
     DELETE_SUCCESS_HTTP_STATUS_CODE = 204
 
     @token = nil
@@ -47,12 +47,45 @@ module RabbitSwift
           'X-Auth-Token' => token
       }
       http_client = HTTPClient.new
-      response = http_client.head(URI.parse(URI.encode(url)))
+      response = http_client.head(URI.parse(URI.encode(url)), nil, auth_header)
       header = {}
+      if HEAD_SUCCESS_HTTP_STATUS_CODE !=  response.status
+        raise 'ERROR HTTP_STATUS = ' + response.status
+      end
       response.header.all.each do |header_list|
         header[header_list[0]] = header_list[1]
       end
       header
+    end
+
+    def get_object(token, url, dest_folder = nil)
+      auth_header = {
+          'X-Auth-Token' => token
+      }
+      query = nil
+      dest_file = nil
+
+      if dest_folder.nil?
+        dest_file = File.join('./', File.basename(url))
+      else
+        dest_file = File.join(dest_folder, File.basename(url))
+      end
+
+      http_client = HTTPClient.new
+
+      open(dest_file, 'wb') do |file|
+        file.write http_client.get_content(URI.parse(URI.encode(url)), query, auth_header)
+      end
+    end
+
+    # TODO
+    def get_static_large_object(token, url, dest_folder = nil)
+      auth_header = {
+          'X-Auth-Token' => token
+      }
+      query = {
+          'format' => 'json'
+      }
     end
 
     def list(token, url)
