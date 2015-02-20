@@ -27,7 +27,8 @@ Or install it yourself as:
      auth_url: "https://ident-r1nd9999.cnode.jp/v2.0/tokens",
      tenantName: "1234567",
      username: "chino",
-     password: "password"
+     password: "password",
+     endPoint: "https://objectstore.node.jp/v1/77777777"
     }
 ```
 
@@ -53,7 +54,7 @@ Or install it yourself as:
 ### Support Static Large Object
 
 #### SLO Object Download Support
-    rabbit_swift_client.get_object(token, url) --> enable SLO object download
+    rabbit_swift_client.get_object(token, slo_manifest_url) --> enable SLO object download
 
 #### When upload object size 5GB over. Auto change mode SLO
     rabbit_swift_client.upload(token, dest_url, 5GB_under_file.zip) --> normal upload
