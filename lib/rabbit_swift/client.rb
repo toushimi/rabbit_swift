@@ -76,7 +76,11 @@ module RabbitSwift
       http_client.receive_timeout = 60 * 120
 
       open(dest_file, 'wb') do |file|
-        file.write http_client.get_content(URI.parse(URI.encode(url)), query, auth_header)
+        
+         http_client.get_content(URI.parse(URI.encode(url)), query, auth_header) do |chunk|
+           file.write chunk
+         end
+
       end
       dest_file
     end
