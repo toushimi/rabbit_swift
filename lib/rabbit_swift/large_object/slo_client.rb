@@ -1,9 +1,10 @@
 require 'rabbit_swift'
+require 'digest/md5'
 
 module RabbitSwift::LargeObject
   class Slo_client
 
-    attr_accessor :rabbit_swift_client, :src_path, :dest_path, :original_dest_path, :slo_option
+    attr_accessor :rabbit_swift_client, :src_path, :dest_path, :original_dest_path, :slo_option, :original_file_md5sum
 
     def initialize(rabbit_swift_client, src_path, dest_path, slo_option = {})
       @rabbit_swift_client = rabbit_swift_client
@@ -17,6 +18,7 @@ module RabbitSwift::LargeObject
     end
 
     def upload
+      original_file_md5sum = Digest::MD5.file(src_path).to_s
       if  @slo_option.has_key?('limit_file_size')
         slo = RabbitSwift::LargeObject::StaticLargeObject.new(src_path, dest_path, limit_file_size: @slo_option['limit_file_size'])
       else
@@ -46,7 +48,7 @@ module RabbitSwift::LargeObject
 
       puts "dest_path->" + dest_path
       #マニフェストをアップロード
-      rabbit_swift_client.upload_manifest(token, dest_path, @original_dest_path, @src_path, manifest_json)
+      rabbit_swift_client.upload_manifest(token, dest_path, @original_dest_path, @src_path, manifest_json, original_file_md5sum)
 
       #分割したファイルを削除
       rabbit_file_split.delete_all

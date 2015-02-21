@@ -44,6 +44,9 @@ response.each do |k, v|
 end
 
 original_file_md5 = response['Etag']
+if is_large_object && response.has_key?(RabbitSwift::LargeObject::StaticLargeObject::ORIGINAL_MD5SUM_META_NAME)
+  original_file_md5 = response[RabbitSwift::LargeObject::StaticLargeObject::ORIGINAL_MD5SUM_META_NAME]
+end
 
 save_file_path = rabbit_swift_client.get_object(token, url, dest_path)
 puts save_file_path
@@ -63,8 +66,8 @@ else
 end
 
 
-#when SLO don't check md5. check file size
-if (!is_large_object)
+#when SLO don't check md5.
+if (!is_large_object || response.has_key?(RabbitSwift::LargeObject::StaticLargeObject::ORIGINAL_MD5SUM_META_NAME))
   save_file_md5 = Digest::MD5.file(save_file_path).to_s
   puts original_file_md5 + ' --> original_file_md5'
   puts save_file_md5 + ' --> save_file_md5'

@@ -192,7 +192,7 @@ module RabbitSwift
       @res.status
     end
 
-    def upload_manifest(token, end_point, dest_container,input_file_path, manifest_json)
+    def upload_manifest(token, end_point, dest_container,input_file_path, manifest_json, original_file_md5sum)
       #相対パスがきた時のために絶対パスに変換
       path_name_obj = Pathname.new(input_file_path);
       file_path = path_name_obj.expand_path.to_s
@@ -208,7 +208,8 @@ module RabbitSwift
             {'X-Auth-Token' => token,
             'X-Object-Manifest' => manifest_path+'_',
             'X-STATIC-LARGE-OBJECT' => true,
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/json',
+            LargeObject::StaticLargeObject::ORIGINAL_MD5SUM_META_NAME => original_file_md5sum
             }
       http_client = HTTPClient.new
       url = URI.parse(URI.encode(target_url + '?multipart-manifest=put'))

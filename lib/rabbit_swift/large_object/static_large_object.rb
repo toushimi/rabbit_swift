@@ -6,6 +6,7 @@ module RabbitSwift::LargeObject
   class StaticLargeObject
 
     LIMIT_FILE_SIZE = 5368709120;
+    ORIGINAL_MD5SUM_META_NAME = 'X-Object-Meta-Original-File-Md5sum'
 
     # 参考　http://blog.bit-isle.jp/bird/2013/06/35
     # Swift Server SLO https://github.com/openstack/swift/blob/7a9a0e14b1c6a8f51454379beac95cd594a4193b/swift/common/middleware/slo.py
