@@ -63,8 +63,10 @@ Or install it yourself as:
 #### SLO Upload Flow
 1. split file
 2. upload split files
-3. upload manifest file
-4. delete split files
+3. create manifest file
+4. upload manifest file
+5. delete split files
+6. delete manifest file
 
 ### bin utils
 

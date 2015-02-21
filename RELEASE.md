@@ -1,5 +1,11 @@
 # リリース履歴
 
+## 0.3.6
+
+(2015/02/21)
+
+Fix get_object chunk file.write for logic large file
+
 ## 0.3.5
 
 (2015/02/21)
