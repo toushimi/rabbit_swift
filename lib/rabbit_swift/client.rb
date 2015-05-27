@@ -225,7 +225,7 @@ module RabbitSwift
     def build_auth_json
       auth_json = {
           auth: {
-              tenantName: @tenantName,
+              #tenantName: @tenantName,
               passwordCredentials: {
                   username: @username,
                   password: @password
