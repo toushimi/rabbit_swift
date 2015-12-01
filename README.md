@@ -25,7 +25,8 @@ Or install it yourself as:
 ```
    swift_conf = {
      auth_url: "https://ident-r1nd9999.cnode.jp/v2.0/tokens",
-     tenantName: "1234567",
+     tenantName: "1234567", // Conoha Swift V1
+     tenantId: "1234567", // Conoha Swift V2
      username: "chino",
      password: "password",
      endPoint: "https://objectstore.node.jp/v1/77777777"

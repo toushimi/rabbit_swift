@@ -19,6 +19,7 @@ module RabbitSwift
     def initialize(opt)
       @auth_url = opt['auth_url']
       @tenantName = opt['tenantName']
+      @tenantId = opt['tenantId']
       @username = opt['username']
       @password = opt['password']
       @send_timeout = opt['send_timeout'];
@@ -35,6 +36,9 @@ module RabbitSwift
       body =  build_auth_json
 
       http_client = HTTPClient.new
+
+      p @auth_url
+      p body
 	
       response = http_client.post_content(@auth_url, body, 'Content-Type' => 'application/json')
       response_json_body = JSON.load(response)
@@ -224,14 +228,15 @@ module RabbitSwift
 
     def build_auth_json
       auth_json = {
-          auth: {
-              #tenantName: @tenantName,
-              passwordCredentials: {
-                  username: @username,
-                  password: @password
+          'auth' =>  {
+              'passwordCredentials' =>  {
+                  'username' => @username,
+                  'password' =>  @password
               }
           }
       }
+      auth_json['auth']['tenantName'] = @tenantName unless @tenantName.nil?
+      auth_json['auth']['tenantId'] = @tenantId unless @tenantId.nil?
       JSON.dump(auth_json)
     end
 
