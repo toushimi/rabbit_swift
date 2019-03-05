@@ -28,7 +28,6 @@ module RabbitSwift::LargeObject
       rabbit_file_split = slo.split
       # JSONマニフェストファイルをつくる
       manifest_json = slo.create_manifest_list(rabbit_file_split.file_list)
-      puts manifest_json
 
       token = rabbit_swift_client.get_token
 
@@ -36,17 +35,13 @@ module RabbitSwift::LargeObject
       #ファイルを全てアップロード
       rabbit_file_split.file_list.each do |file_path|
         status = rabbit_swift_client.upload(token, dest_path, file_path)
-        puts file_path
-        puts 'http_status -> ' + status.to_s
         if (status == RabbitSwift::Client::UPLOAD_SUCCESS_HTTP_STATUS_CODE)
-          puts 'upload OK'
+          ;
         else
-          puts 'upload NG'
           return
         end
       end
 
-      puts "dest_path->" + dest_path
       #マニフェストをアップロード
       rabbit_swift_client.upload_manifest(token, dest_path, @original_dest_path, @src_path, manifest_json, original_file_md5sum)
 

@@ -37,9 +37,6 @@ module RabbitSwift
 
       http_client = HTTPClient.new
 
-      p @auth_url
-      p body
-	
       response = http_client.post_content(@auth_url, body, 'Content-Type' => 'application/json')
       response_json_body = JSON.load(response)
 
@@ -111,7 +108,6 @@ module RabbitSwift
       response.header.all.each do |header_list|
         header[header_list[0]] = header_list[1]
       end
-      p response
       header
     end
 
@@ -137,8 +133,6 @@ module RabbitSwift
 
       target_url = add_filename_to_url(end_point, file_path)
 
-      puts 'upload_url -> ' + target_url
-
       if @delete_at
         auth_header['X-Delete-At'] = @delete_at
       end
@@ -162,7 +156,6 @@ module RabbitSwift
           #auth_header['X-Container-Meta-Web-Listings'] = 'true'
           #auth_header['X-Container-Meta-Web-Listings-CSS'] = 'listing.css'
         end
-        p auth_header
         @res = http_client.put(URI.parse(URI.encode(target_url)), file_path, auth_header)
         if @res.status == UPLOAD_SUCCESS_HTTP_STATUS_CODE
           Dir::foreach(file_path) {|f|
@@ -177,12 +170,8 @@ module RabbitSwift
           }
         end
       else
-        p auth_header
 
         if LargeObject::StaticLargeObject.is_over_default_limit_object_size(File.size(file_path))
-          #Auto SLO Mode
-          p File.size(file_path)
-          puts '------ Over limit object size! change Static Large Object Mode. ------- '
           LargeObject::Slo_client.new(self, input_file_path, end_point).upload
         else
           File.open(file_path) do |file|
@@ -191,8 +180,6 @@ module RabbitSwift
         end
 
       end
-
-      #p @res
       @res.status
     end
 
@@ -203,11 +190,7 @@ module RabbitSwift
       target_url = add_filename_to_url(end_point, file_path)
 
       manifest_path = File.join(dest_container, File.basename(input_file_path))
-      p end_point
-      p File.basename(input_file_path)
-      p manifest_path
       manifest_path.sub!(/^./,'')
-      p manifest_path
       auth_header =
             {'X-Auth-Token' => token,
             'X-Object-Manifest' => manifest_path+'_',
@@ -217,11 +200,8 @@ module RabbitSwift
             }
       http_client = HTTPClient.new
       url = URI.parse(URI.encode(target_url + '?multipart-manifest=put'))
-      p url
-      p auth_header
       response = http_client.put(url, manifest_json, auth_header)
-      p response
-      p response.status
+      response
     end
 
     private
